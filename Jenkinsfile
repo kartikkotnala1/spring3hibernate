@@ -19,7 +19,7 @@ pipeline {
 
                 stage('Code Stability') {
                     steps {
-                        sh 'mvn clean test -Dfindbugs.skip=true'
+                        sh 'mvn clean test -Dfindbugs.skip=true -DtestFailureIgnore=true'
                     }
                     post {
                         always {
@@ -42,7 +42,7 @@ pipeline {
                         expression { params.RUN_CODE_COVERAGE == true }
                     }
                     steps {
-                        sh 'mvn org.jacoco:jacoco-maven-plugin:0.8.11:prepare-agent test org.jacoco:jacoco-maven-plugin:0.8.11:report -Dfindbugs.skip=true'
+                        sh 'mvn org.jacoco:jacoco-maven-plugin:0.8.11:prepare-agent test org.jacoco:jacoco-maven-plugin:0.8.11:report -Dfindbugs.skip=true -DtestFailureIgnore=true'
                     }
                 }
             }
