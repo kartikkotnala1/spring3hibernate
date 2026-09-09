@@ -73,12 +73,7 @@ pipeline {
             mail to: 'kartikotnal05@gmail.com',
                  subject: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                  body: "Build succeeded and artifacts published: ${env.BUILD_URL}"
-        }
-        failure {
-            slackSend(channel: '#ci-alerts', message: "FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}")
-            mail to: 'kartikotnal05@gmail.com',
-                 subject: "FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                 body: "Build failed: ${env.BUILD_URL}"
+   
         }
         aborted {
             mail to: 'kartikotnal05@gmail.com',
