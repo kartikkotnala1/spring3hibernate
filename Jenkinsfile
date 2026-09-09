@@ -19,7 +19,7 @@ pipeline {
 
                 stage('Code Stability') {
                     steps {
-                        sh 'mvn clean test'
+                        sh 'mvn clean test -Dmaven.compiler.source=8 -Dmaven.compiler.target=8'
                     }
                     post {
                         always {
@@ -33,7 +33,7 @@ pipeline {
                         expression { params.RUN_CODE_QUALITY == true }
                     }
                     steps {
-                        sh 'mvn checkstyle:checkstyle'
+                        sh 'mvn checkstyle:checkstyle -Dmaven.compiler.source=8 -Dmaven.compiler.target=8'
                     }
                 }
 
@@ -42,7 +42,7 @@ pipeline {
                         expression { params.RUN_CODE_COVERAGE == true }
                     }
                     steps {
-                        sh 'mvn jacoco:report'
+                        sh 'mvn org.jacoco:jacoco-maven-plugin:0.8.11:prepare-agent test org.jacoco:jacoco-maven-plugin:0.8.11:report -Dmaven.compiler.source=8 -Dmaven.compiler.target=8'
                     }
                 }
             }
@@ -73,8 +73,8 @@ pipeline {
             mail to: 'kartikotnal05@gmail.com',
                  subject: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                  body: "Build succeeded and artifacts published: ${env.BUILD_URL}"
-   
         }
+
         aborted {
             mail to: 'kartikotnal05@gmail.com',
                  subject: "DENIED/ABORTED: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
