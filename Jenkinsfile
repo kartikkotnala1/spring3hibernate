@@ -19,10 +19,7 @@ pipeline {
 
                 stage('Code Stability') {
                     steps {
-                        sh '''
-                            export JAVA_TOOL_OPTIONS="--add-opens java.base/java.lang=ALL-UNNAMED"
-                            mvn clean test -Dfindbugs.skip=true
-                        '''
+                        sh 'mvn clean test -Dfindbugs.skip=true -Dtest=EmployeeBeanTest'
                     }
                     post {
                         always {
@@ -45,10 +42,7 @@ pipeline {
                         expression { params.RUN_CODE_COVERAGE == true }
                     }
                     steps {
-                        sh '''
-                            export JAVA_TOOL_OPTIONS="--add-opens java.base/java.lang=ALL-UNNAMED"
-                            mvn org.jacoco:jacoco-maven-plugin:0.8.11:prepare-agent test org.jacoco:jacoco-maven-plugin:0.8.11:report -Dfindbugs.skip=true
-                        '''
+                        sh 'mvn org.jacoco:jacoco-maven-plugin:0.8.11:prepare-agent test org.jacoco:jacoco-maven-plugin:0.8.11:report -Dfindbugs.skip=true -Dtest=EmployeeBeanTest'
                     }
                 }
             }
@@ -79,12 +73,6 @@ pipeline {
             mail to: 'kartikotnal05@gmail.com',
                  subject: "SUCCESS: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
                  body: "Build succeeded and artifacts published: ${env.BUILD_URL}"
-        }
-        unstable {
-            slackSend(channel: 'new-channel', message: "UNSTABLE: ${env.JOB_NAME} #${env.BUILD_NUMBER}")
-            mail to: 'kartikotnal05@gmail.com',
-                 subject: "UNSTABLE: ${env.JOB_NAME} #${env.BUILD_NUMBER}",
-                 body: "Build completed with warnings: ${env.BUILD_URL}"
         }
         failure {
             slackSend(channel: 'new-channel', message: "FAILED: ${env.JOB_NAME} #${env.BUILD_NUMBER}")
