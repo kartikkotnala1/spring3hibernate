@@ -42,7 +42,10 @@ pipeline {
                         expression { params.RUN_CODE_COVERAGE == true }
                     }
                     steps {
-                        sh 'mvn org.jacoco:jacoco-maven-plugin:0.8.11:prepare-agent test org.jacoco:jacoco-maven-plugin:0.8.11:report -Dfindbugs.skip=true -Dtest=EmployeeBeanTest -Dproject.build.directory=target-coverage'
+                        dir('coverage-workspace') {
+                            git branch: 'master', url: 'https://github.com/kartikkotnala1/spring3hibernate.git'
+                            sh 'mvn org.jacoco:jacoco-maven-plugin:0.8.11:prepare-agent test org.jacoco:jacoco-maven-plugin:0.8.11:report -Dfindbugs.skip=true -Dtest=EmployeeBeanTest'
+                        }
                     }
                 }
             }
@@ -53,7 +56,7 @@ pipeline {
                 sh '''
                     mkdir -p reports
                     cp -r target/site/* reports/ || true
-                    cp -r target-coverage/site/* reports/ || true
+                    cp -r coverage-workspace/target/site/* reports/ || true
                 '''
             }
         }
