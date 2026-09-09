@@ -42,7 +42,7 @@ pipeline {
                         expression { params.RUN_CODE_COVERAGE == true }
                     }
                     steps {
-                        sh 'mvn org.jacoco:jacoco-maven-plugin:0.8.11:prepare-agent test org.jacoco:jacoco-maven-plugin:0.8.11:report -Dfindbugs.skip=true -Dtest=EmployeeBeanTest'
+                        sh 'mvn org.jacoco:jacoco-maven-plugin:0.8.11:prepare-agent test org.jacoco:jacoco-maven-plugin:0.8.11:report -Dfindbugs.skip=true -Dtest=EmployeeBeanTest -Dproject.build.directory=target-coverage'
                     }
                 }
             }
@@ -50,7 +50,11 @@ pipeline {
 
         stage('Generate Reports') {
             steps {
-                sh 'mkdir -p reports && cp -r target/site/* reports/ || true'
+                sh '''
+                    mkdir -p reports
+                    cp -r target/site/* reports/ || true
+                    cp -r target-coverage/site/* reports/ || true
+                '''
             }
         }
 
